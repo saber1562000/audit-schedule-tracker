@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EQA Schedule Metrics</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-brand">EQA Tracker</span>
+            <button class="sidebar-toggle" onclick="toggleSidebar()" title="Collapse">&#9776;</button>
+        </div>
+
+        <div class="sidebar-nav">
+            <div class="sidebar-section" data-section="programme">
+                <div class="sidebar-section-title" onclick="toggleSection('programme')">
+                    <span class="sidebar-icon">&#9632;</span>
+                    <span class="sidebar-label">Programme</span>
+                    <span class="sidebar-chevron">&#9662;</span>
+                </div>
+                <div class="sidebar-items" id="section-programme">
+                    <a href="#" class="sidebar-item active" data-view="dashboard" onclick="showView('dashboard'); return false;">
+                        <span class="sidebar-icon">&#8862;</span><span class="sidebar-label">Dashboard</span>
+                    </a>
+                    <a href="#" class="sidebar-item" data-view="audits" onclick="showView('audits'); return false;">
+                        <span class="sidebar-icon">&#9998;</span><span class="sidebar-label">Audits</span>
+                    </a>
+                    <a href="#" class="sidebar-item" data-view="vendors" onclick="showView('vendors'); return false;">
+                        <span class="sidebar-icon">&#9881;</span><span class="sidebar-label">Vendors</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-section" data-section="planning">
+                <div class="sidebar-section-title" onclick="toggleSection('planning')">
+                    <span class="sidebar-icon">&#9776;</span>
+                    <span class="sidebar-label">Planning</span>
+                    <span class="sidebar-chevron">&#9662;</span>
+                </div>
+                <div class="sidebar-items" id="section-planning">
+                    <a href="#" class="sidebar-item" data-view="forecast" onclick="showView('forecast'); return false;">
+                        <span class="sidebar-icon">&#8631;</span><span class="sidebar-label">Forecast</span>
+                    </a>
+                    <a href="#" class="sidebar-item" data-view="capacity" onclick="showView('capacity'); return false;">
+                        <span class="sidebar-icon">&#9879;</span><span class="sidebar-label">Capacity</span>
+                    </a>
+                    <a href="#" class="sidebar-item sidebar-coming-soon">
+                        <span class="sidebar-icon">&#8645;</span><span class="sidebar-label">Scenario Planner</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-section" data-section="people">
+                <div class="sidebar-section-title" onclick="toggleSection('people')">
+                    <span class="sidebar-icon">&#9823;</span>
+                    <span class="sidebar-label">People</span>
+                    <span class="sidebar-chevron">&#9662;</span>
+                </div>
+                <div class="sidebar-items" id="section-people">
+                    <a href="#" class="sidebar-item" data-view="auditors" onclick="showView('auditors'); return false;">
+                        <span class="sidebar-icon">&#9824;</span><span class="sidebar-label">Auditors</span>
+                    </a>
+                    <a href="#" class="sidebar-item" data-view="calendar" onclick="showView('calendar'); return false;">
+                        <span class="sidebar-icon">&#9872;</span><span class="sidebar-label">Calendar</span>
+                    </a>
+                    <a href="#" class="sidebar-item" data-view="skills" onclick="showView('skills'); return false;">
+                        <span class="sidebar-icon">&#9733;</span><span class="sidebar-label">Skills Matrix</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-section" data-section="insights">
+                <div class="sidebar-section-title" onclick="toggleSection('insights')">
+                    <span class="sidebar-icon">&#9670;</span>
+                    <span class="sidebar-label">Insights</span>
+                    <span class="sidebar-chevron">&#9662;</span>
+                </div>
+                <div class="sidebar-items" id="section-insights">
+                    <a href="#" class="sidebar-item" data-view="risk" onclick="showView('risk'); return false;">
+                        <span class="sidebar-icon">&#9888;</span><span class="sidebar-label">Risk</span>
+                    </a>
+                    <a href="#" class="sidebar-item" data-view="closure" onclick="showView('closure'); return false;">
+                        <span class="sidebar-icon">&#10003;</span><span class="sidebar-label">Closure Tracker</span>
+                    </a>
+                    <a href="#" class="sidebar-item sidebar-coming-soon">
+                        <span class="sidebar-icon">&#8599;</span><span class="sidebar-label">Trends</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-utilities">
+            <button class="sidebar-util-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle Theme">
+                <span class="sidebar-icon">&#9789;</span><span class="sidebar-label">Theme</span>
+            </button>
+            <button class="sidebar-util-btn" onclick="importData()" title="Import">
+                <span class="sidebar-icon">&#8615;</span><span class="sidebar-label">Import</span>
+            </button>
+            <button class="sidebar-util-btn" onclick="exportData()" title="Export">
+                <span class="sidebar-icon">&#8613;</span><span class="sidebar-label">Export</span>
+            </button>
+            <button class="sidebar-util-btn" onclick="runDataQualityCheck()" title="Data Quality">
+                <span class="sidebar-icon">&#9878;</span><span class="sidebar-label">Data Quality</span>
+            </button>
+            <button class="sidebar-util-btn" onclick="clearLocalData()" title="Reset">
+                <span class="sidebar-icon">&#8635;</span><span class="sidebar-label">Reset</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div id="main-content" class="main-content">
+
+        <!-- ===== DASHBOARD ===== -->
+        <div id="view-dashboard" class="page-content">
+        </div>
+
+        <!-- ===== AUDITS ===== -->
+        <div id="view-audits" class="page-content" style="display:none;">
+            <div class="view-header">
+                <h1 class="page-title">Audits</h1>
+                <div id="audit-btn-bar">
+                    <button class="btn-primary" onclick="addAudit()">+ Add Audit</button>
+                    <button class="btn-secondary" onclick="showAuditQuickUpdate()">&#9889; Quick Update</button>
+                </div>
+            </div>
+            <div class="filter-bar" id="audit-filter-bar">
+                <input type="text" class="filter-search" id="audit-search" placeholder="Search audits..." oninput="renderAuditList()">
+                <select class="filter-select" id="audit-filter-scheduling" onchange="renderAuditList()">
+                    <option value="">All Scheduling</option>
+                    <optgroup label="Show only">
+                        <option value="Scheduled - Complete">Complete</option>
+                        <option value="Scheduled - Upcoming">Upcoming</option>
+                        <option value="Scheduled - Overdue">Scheduled Overdue</option>
+                        <option value="Unscheduled - Pending">Unscheduled</option>
+                        <option value="Unscheduled - Overdue">Unscheduled Overdue</option>
+                        <option value="On Hold">On Hold</option>
+                        <option value="Rescheduled">Rescheduled</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Due Next Year">Due Next Year</option>
+                        <option value="Future">Future</option>
+                    </optgroup>
+                    <optgroup label="Exclude">
+                        <option value="!Scheduled - Complete">Exclude Complete</option>
+                        <option value="!Cancelled">Exclude Cancelled</option>
+                        <option value="!On Hold">Exclude On Hold</option>
+                        <option value="!Cancelled,On Hold">Exclude Cancelled & On Hold</option>
+                        <option value="!Cancelled,On Hold,Rescheduled">Exclude Cancelled, On Hold & Rescheduled</option>
+                    </optgroup>
+                </select>
+                <select class="filter-select" id="audit-filter-type" onchange="renderAuditList()">
+                    <option value="">All Types</option>
+                    <option value="Routine">Routine</option>
+                    <option value="Qualification">Qualification</option>
+                    <option value="For-cause">For-cause</option>
+                </select>
+                <select class="filter-select" id="audit-filter-method" onchange="renderAuditList()">
+                    <option value="">All Methods</option>
+                    <option value="On-site">On-site</option>
+                    <option value="Virtual">Virtual</option>
+                    <option value="Desktop">Desktop</option>
+                </select>
+                <select class="filter-select" id="audit-filter-region" onchange="renderAuditList()">
+                    <option value="">All Regions</option>
+                    <option value="USA">USA</option>
+                    <option value="EU">EU</option>
+                    <option value="India">India</option>
+                    <option value="Asia">Asia</option>
+                    <option value="China">China</option>
+                </select>
+                <select class="filter-select" id="audit-filter-year" onchange="renderAuditList()">
+                    <option value="">All Years</option>
+                </select>
+                <button class="btn-filter-clear" onclick="clearAuditFilters()">Clear</button>
+            </div>
+            <table>
+                <thead id="audit-table-head">
+                    <tr>
+                        <th>Audit ID</th>
+                        <th>Vendor</th>
+                        <th>Region</th>
+                        <th>Type</th>
+                        <th>Method</th>
+                        <th>Required By</th>
+                        <th>Date Agreed</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Audit Status</th>
+                        <th>Scheduling Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="audit-table-body"></tbody>
+            </table>
+            <div class="table-footer" id="audit-table-footer"></div>
+        </div>
+
+        <!-- ===== VENDORS ===== -->
+        <div id="view-vendors" class="page-content" style="display:none;">
+            <div class="view-header">
+                <h1 class="page-title">Vendors</h1>
+                <div id="vendor-btn-bar">
+                    <button class="btn-primary" onclick="addVendor()">+ Add Vendor</button>
+                    <button class="btn-secondary" onclick="showVendorQuickUpdate()">&#9889; Quick Update</button>
+                </div>
+            </div>
+            <div class="filter-bar" id="vendor-filter-bar">
+                <input type="text" class="filter-search" id="vendor-search" placeholder="Search vendors..." oninput="renderVendorList()">
+                <select class="filter-select" id="vendor-filter-qualification" onchange="renderVendorList()">
+                    <option value="">All Qualification</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Qualified">Qualified</option>
+                    <option value="Conditional">Conditional</option>
+                    <option value="Not Qualified">Not Qualified</option>
+                    <option value="Disqualified">Disqualified</option>
+                </select>
+                <select class="filter-select" id="vendor-filter-active" onchange="renderVendorList()">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+                <select class="filter-select" id="vendor-filter-review" onchange="renderVendorList()">
+                    <option value="">All Review Status</option>
+                    <option value="pending">Pending Review</option>
+                    <option value="reviewed">Reviewed</option>
+                </select>
+                <select class="filter-select" id="vendor-filter-region" onchange="renderVendorList()">
+                    <option value="">All Regions</option>
+                    <option value="USA">USA</option>
+                    <option value="EU">EU</option>
+                    <option value="India">India</option>
+                    <option value="Asia">Asia</option>
+                    <option value="China">China</option>
+                </select>
+                <select class="filter-select" id="vendor-filter-type" onchange="renderVendorList()">
+                    <option value="">All Types</option>
+                </select>
+                <button class="btn-filter-clear" onclick="clearVendorFilters()">Clear</button>
+            </div>
+            <table>
+                <thead id="vendor-table-head">
+                    <tr>
+                        <th>ID</th>
+                        <th>Vendor Name</th>
+                        <th>City</th>
+                        <th>Region</th>
+                        <th>Type</th>
+                        <th>Qualification</th>
+                        <th>Active</th>
+                        <th>Last Audit</th>
+                        <th>Risk</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="vendor-table-body"></tbody>
+            </table>
+            <div class="table-footer" id="vendor-table-footer"></div>
+        </div>
+
+        <!-- ===== VENDOR DETAIL ===== -->
+        <div id="view-vendor-detail" class="page-content" style="display:none;">
+        </div>
+
+        <!-- ===== AUDIT DETAIL ===== -->
+    <div id="view-audit-detail" class="page-content" style="display:none;">
+    </div>
+
+        <!-- ===== AUDITORS ===== -->
+    <div id="view-auditors" class="page-content" style="display:none;">
+        <div class="view-header">
+            <h1 class="page-title">Auditors</h1>
+            <button class="btn-primary" onclick="addAuditor()">+ Add Auditor</button>
+        </div>
+        <div id="auditor-region-tabs"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Region</th>
+                    <th>Status</th>
+                    <th>Date Added</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="auditor-table-body"></tbody>
+        </table>
+        <div class="table-footer" id="auditor-table-footer"></div>
+    </div>
+
+    <!-- ===== AUDITOR DETAIL ===== -->
+    <div id="view-auditor-detail" class="page-content" style="display:none;">
+    </div>
+
+        <!-- ===== FORECAST ===== -->
+        <div id="view-forecast" class="page-content" style="display:none;">
+        </div>
+
+        <!-- ===== RISK ===== -->
+        <div id="view-risk" class="page-content" style="display:none;">
+        </div>
+
+        <!-- ===== CAPACITY ===== -->
+        <div id="view-capacity" class="page-content" style="display:none;">
+        </div>
+
+        <!-- ===== CLOSURE ===== -->
+         <div id="view-closure" class="page-content" style="display:none;">
+         </div>
+
+         <!-- ===== SKILLS MATRIX ===== -->
+    <div id="view-skills" class="page-content" style="display:none;">
+    </div>
+
+    <!-- ===== CALENDAR ===== -->
+    <div id="view-calendar" class="page-content" style="display:none;">
+    </div>
+
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div id="modal-overlay" class="modal-overlay" style="display:none;" onclick="closeModalOverlay(event)">
+        <div class="modal-panel" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modal-title">Form</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn-primary" id="modal-save-btn" onclick="saveModal()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script src="data.js"></script>
+    <script src="rules.js"></script>
+    <script src="app.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="audits.js"></script>
+    <script src="vendors.js"></script>
+    <script src="auditors.js"></script>
+    <script src="forecast.js"></script>
+    <script src="risk.js"></script>
+    <script src="capacity.js"></script>
+    <script src="closure.js"></script>
+    <script src="skills.js"></script>
+    <script src="calendar.js"></script>
+    <script src="import-export.js"></script>
+    <script>loadTheme(); initSidebar(); showView("dashboard");</script>
+</body>
+</html>
